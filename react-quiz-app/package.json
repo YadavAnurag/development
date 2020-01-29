@@ -1,0 +1,20 @@
+{
+  "name": "react-quiz-app",
+  "version": "1.0.0",
+  "description": "Quiz App",
+  "main": "index.js",
+  "scripts": {
+    "babel-watch": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch",
+    "start": "live-server public"
+  },
+  "keywords": [
+    "Quiz"
+  ],
+  "author": "Anurag Yadav",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1"
+  }
+}

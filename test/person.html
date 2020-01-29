@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.person{
+			border: 1px solid #eee;
+			margin: 1rem;
+			padding: 2rem;
+			width: 200px;
+			box-shadow: 2px 2px #ccc;
+			display: inline-block;
+		}
+	</style>
+
+</head>
+<body>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+	
+	<div id="output"></div>
+
+	<div id="p1"></div>
+	<!-- Load Babel -->
+	<!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+	
+	<!-- Your custom script here -->
+	<script type="text/babel">
+	const getMessage = () => "Hello World";
+	document.getElementById('output').innerHTML = getMessage();
+
+	function Person(){
+		return (
+			<div class="person">
+				<h1>Shivam</h1>
+				<p>Age: 12</p>
+			</div>
+		);
+	}
+	class AnotherPerson extends Component{
+		render(){
+			return(
+				<h1>Hi this is me</h1>
+			)
+		}
+	}
+	reactDOM.render(<AnotherPerson />, document.getElementById("p1"));
+	</script>
+
+
+
+	<div class="person">
+		<h1>Kaushlesh</h1>
+		<p>Age: 13</p>
+	</div>
+
+	
+</body>
+</html>
