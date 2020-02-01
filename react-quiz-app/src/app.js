@@ -1,4 +1,4 @@
-const quizzes= [
+const questions= [
   {
     id: 1234,
     question: 'Which game do you like most', 
@@ -18,45 +18,64 @@ const quizzes= [
       { id: 33, option: 'Jacquiline'},
       { id: 44, option: 'Sarah'}
     ]
+  },
+  {
+    id: 3451,
+    question: 'Best time wo wake up ?', 
+    options: [
+      { id: 111, option: '6am' },
+      { id: 222, option: '7am'},
+      { id: 333, option: '8am'},
+      { id: 444, option: '12am'}
+    ]
   }
 ]
 
 class QuizApp extends React.Component{
   constructor(props){
-    // const localAnswers = JSON.parse(localStorage.getItem('userAnswers'))
     super(props);
     this.state = {
-      //userAnswers: localAnswers? localAnswers: {}
-      userAnswers: {}
+      answers: {}
     };
     this.optionChangeHandler = this.optionChangeHandler.bind(this);
   }
+  componentDidMount(){
+    try {
+      const json = localStorage.getItem('answers');
+      const answers = JSON.parse(json);
+      if(answers){
+        this.setState(()=> ({answers}));
+      }
+    } catch (error) {}
+  }
+  componentDidUpdate(prevProps, prevState){
+    if(JSON.stringify(prevState.answers) !== JSON.stringify(this.state.answers)){
+      const json = JSON.stringify(this.state.answers);
+      localStorage.setItem('answers', json);
+    }
+  }
+  componentWillUnmount(){
+    console.log('componentWillUnmount');
+  }
 
   optionChangeHandler(questionId, answerId){
-    const answer = {}
+    const answer = {};
     answer[questionId] = answerId;
     this.setState((prevState)=>{
-      const updatedState = Object.assign(prevState.userAnswers, answer)
-      return {
-        userAnswers: updatedState
-      }
-    })
-    // localStorage.setItem('userAnswers', JSON.stringify(this.state.userAnswers));
-    // console.log(this.state, JSON.parse(localStorage.getItem('userAnswers')));
+      return {answers: {...prevState.answers, ...answer}}
+    });
   }
 
   render(){
-    const title = 'QuizApp';
     const subtitle = 'Hello... can you answer these questions ?';
-    const status = '1/10 questions has been answered';
     
     return (
       <div>
-        <Header title={title} subtitle={subtitle} />
-        <QuizStatus status={status} />
-        <Quizzes 
-          quizzes={quizzes} 
-          userAnswers={this.state.userAnswers}
+        <Header subtitle={subtitle} />
+        <Status questionsLength={questions.length} answersLength={Object.keys(this.state.answers).length} />
+        <Questions 
+          questions={questions} 
+          answers={this.state.answers}
           optionChangeHandler={this.optionChangeHandler}
         />
         <Action />
@@ -66,93 +85,87 @@ class QuizApp extends React.Component{
   }
 }
 
-class Header extends React.Component{
-  render(){
-    return (
-      <div>
-        <div>{this.props.title}</div>
-        <div>{this.props.subtitle}</div>
-      </div>
-    )
-  }
+const Header = (props)=>{
+  return (
+    <div>
+      <div>{props.title}</div>
+      {props.subtitle && <div>{ props.subtitle }</div>}
+    </div>
+  )
+}
+Header.defaultProps ={
+  title: 'QuizApp'
 }
 
-class QuizStatus extends React.Component{
-  render(){
-    return (
-      <div>
-        <div>{this.props.status}</div>
-      </div>
-    )
-  }
+const Status = (props)=>{
+  return (
+    <div>
+      {
+        props.answersLength === props.questionsLength ?
+        <p>Every question has been answered</p>:
+        <p>You have answered {props.answersLength}/{props.questionsLength}</p>
+      }
+    </div>
+  )
 }
 
-class Quizzes extends React.Component{  
-  render(){
-    return (
-      this.props.quizzes.map((quiz, index)=>{
-        return (
-          <Quiz 
-            key={quiz.id} 
-            quiz={quiz} 
-            questionId={quiz.id} 
-            index={index}
-            userAnswers={this.props.userAnswers}
-            optionChangeHandler={this.props.optionChangeHandler}
-          />
-        )
-      })
-    )
-  }
-}
-
-class Quiz extends React.Component{
-  render(){
-    return (
-      <div>
-        <Question question={this.props.quiz.question} index={this.props.index} />
-        <Options 
-          options={this.props.quiz.options} 
-          questionId={this.props.questionId} 
-          userChoseOptionId={this.props.userAnswers[this.props.questionId]}
-          optionChangeHandler={this.props.optionChangeHandler}
+const Questions = (props)=>{
+  return (
+    props.questions.map((questionObj, index)=>{
+      return (
+        <QuestionCard 
+          key={index} 
+          questionObj={questionObj} 
+          index={index}
+          answers={props.answers}
+          optionChangeHandler={props.optionChangeHandler}
         />
-      </div>
-    )
-  }
+      )
+    })
+  )
 }
 
-class Question extends React.Component{
-  render(){
-    return (
-      <div> {this.props.index+1}. {this.props.question}</div>
-    )
-  }
+const QuestionCard = (props)=>{
+  return (
+    <div>
+      <Question questionText={props.questionObj.question} index={props.index} />
+      <Options 
+        options={props.questionObj.options} 
+        questionId={props.questionObj.id} 
+        userChoseOptionId={props.answers[props.questionObj.id]}
+        optionChangeHandler={props.optionChangeHandler}
+      />
+    </div>
+  )
 }
 
-class Options extends React.Component{
-  render(){
-    return (
-      <div>
-        <ul>
-          {
-            this.props.options.map((optionObj)=>{
-              return (
-                <Option 
-                  key={optionObj.id} 
-                  optionText={optionObj.option}
-                  optionId={optionObj.id} 
-                  questionId={this.props.questionId}
-                  userChoseOptionId={this.props.userChoseOptionId}
-                  optionChangeHandler={this.props.optionChangeHandler}
-                />
-              )
-            })
-          }
-        </ul>
-      </div>
-    )
-  }
+const Question = (props)=>{
+  return (
+    <div> {props.index+1}. {props.questionText}</div>
+  )
+}
+
+const Options = (props)=>{
+  return (
+    <div>
+      <ul>
+        {
+          props.options.map((optionObj, index)=>{
+            return (
+              <Option 
+                key={index} 
+                optionText={optionObj.option}
+                optionId={optionObj.id} 
+                questionId={props.questionId}
+                userChoseOptionId={props.userChoseOptionId}
+                optionChangeHandler={props.optionChangeHandler}
+              />
+            )
+          })
+        }
+      </ul>
+    </div>
+  )
 }
 
 class Option extends React.Component{
@@ -173,11 +186,11 @@ class Option extends React.Component{
           className='radioCustomButton'
           name={this.props.questionId}
           value={this.props.optionId}
-          defaultChecked={this.props.optionId == this.props.userChoseOptionId}
+          checked={this.props.optionId === this.props.userChoseOptionId}
           onChange={this.optionChangeHandler}
         />
         <label className='optionLabel'>
-          {this.props.optionText}
+          {this.props.optionText}    
         </label>
       </li>
     )
@@ -187,37 +200,33 @@ class Option extends React.Component{
 class Action extends React.Component{
   constructor(props){
     super(props)
-    this.handleQuizSubmit = this.handleQuizSubmit.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleQuizSubmit(){
+  handleSubmit(){
     alert('Sure to submit ?')
   }
 
   render(){
     return (
       <div>
-        <div>
-          <button 
-            type='submit'
-            onClick={this.handleQuizSubmit}
-          >
-            Submit
-          </button>
-        </div>
+        <button 
+          type='submit'
+          onClick={this.handleSubmit}
+        >
+          Submit
+        </button>
       </div>
     )
   }
 }
 
-class Footer extends React.Component{
-  render(){
-    return (
-      <div>
-        <div>This is footer Component</div>
-      </div>
-    )
-  }
+const Footer = ()=>{
+  return (
+    <div>
+      <div>This is footer Component</div>
+    </div>
+  )
 }
 
-ReactDOM.render(<QuizApp/>, document.getElementById('app'))
+ReactDOM.render(<QuizApp />, document.getElementById('app'))
