@@ -32,3 +32,8 @@ const shuffleArray = (array)=>{
 modules to be installed -
 npm install style-loader css-loader
 npm install sass-loader node-sass
+
+
+sites-
+getbem.com
+sass reference functions
