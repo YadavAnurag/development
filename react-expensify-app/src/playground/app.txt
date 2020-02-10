@@ -1,6 +1,17 @@
 installations-
 npm install react-router-dom@5.1.2
-
+npm install redux5.0.4
+npm install uuid@3.4.0
+npm install babel-plugin-transform-object-rest-spread@6.23.0
+npm install react-redux@5.0.5
 
 sites-
 react router
+redux.js.org
+
+
+HOC highers orders components
+Reuse code
+Render hijacking
+Prop manipulation
+Abstract state

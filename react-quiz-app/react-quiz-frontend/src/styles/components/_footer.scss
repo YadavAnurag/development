@@ -1,0 +1,35 @@
+.footer {
+  background: purple;
+}
+
+// top
+.footer__first-div {
+  display: flex;
+}
+
+.left {
+  background: pink;
+  -ms-flex: 1;
+  flex: 1;
+}
+.right {
+  background: red;
+  -ms-flex: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+// bottom
+.footer__second-div {
+  background: white;
+  text-align: center;
+}
+
+
+@media(max-width: $desktop-breakpoint) {
+  .footer__first-div {
+    display: block;
+  }
+}
+

@@ -1,0 +1,49 @@
+
+// button
+.button {
+  background:  transparent;
+  border: 2px solid $off-purple;
+  color: $off-purple;
+  border-radius: $m-size;
+  padding: $xs-size $m-size;
+}
+
+.button--sm {
+  border-radius: $m-size;
+  padding: $xs-size $m-size;
+}
+.button--md {
+  border-radius: $l-size;
+  font-size: 2rem;
+  padding: $s-size $l-size;
+}
+.button--lg {
+  border-radius: $xl-size;
+  font-size: $l-size;
+  padding: $s-size $l-size;
+}
+.button--status {
+  border-radius: 48%;
+  display: inline-block;
+  margin: 0.3rem;
+  padding: $s-size;
+  text-decoration: none;
+}
+.button--answered {
+  background: $off-purple;
+  color: white;
+}
+.button--unanswered {
+
+}
+.button--answered:hover {
+
+}
+.button:hover {
+  background: $off-purple;
+  color: white;
+}
+.button--unanswered:hover {
+  background: white;
+  color: $off-purple;
+}

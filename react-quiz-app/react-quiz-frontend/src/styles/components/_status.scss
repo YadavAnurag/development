@@ -1,0 +1,19 @@
+.status {
+  background: $off-white;
+  margin-bottom: $m-size;
+}
+.status__button-root {
+  display: inline-block;
+}
+.status__text-div {
+  border-bottom: 1px solid darken($very-berry, 10%);
+}
+.status__answer-status {
+  font-size: 2rem;
+  margin: 0;
+  text-align: center; 
+  padding: $s-size 0;
+}
+.status__button-div {
+  padding: $xs-size 0;
+}

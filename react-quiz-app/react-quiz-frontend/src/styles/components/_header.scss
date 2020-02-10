@@ -1,0 +1,35 @@
+.header {
+  background: $very-berry;
+  box-shadow: 0 $s-size $l-size rgba(76, 65, 99, 0.7);;
+  color: white;
+  margin-bottom: $m-size;
+  padding: 0;
+}
+
+.header__title {
+  display: inline;
+  font-size: $l-size;
+  margin: 0;
+}
+.header__subtitle {
+  display: inline;
+  padding: 0;
+}
+
+// navbar
+.navbar {
+  padding-top: $s-size;
+}
+.navbar__nav-link {
+  color: white;
+  font-size: $m-size;
+  padding-right: $l-size;
+  text-decoration: none;
+}
+
+@media(min-width: $desktop-breakpoint) {
+  .navbar__nav-link{
+    font-size: 2rem;
+    padding-right: $xxl-size;
+  }
+}
