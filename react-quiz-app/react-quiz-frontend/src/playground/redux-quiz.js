@@ -139,14 +139,12 @@ const editQuestion = (
 const changeAnswer = (
   {
     quizId = 0,
-    questionId = 0,
-    optionId = 0
+    answer = {}
   } = {}
 )=>({
   type: 'CHANGE_ANSWER',
   quizId,
-  questionId,
-  optionId
+  answer
 });
 // CLEAR_ANSWER
 // CLEAR_ANSWERS
@@ -214,7 +212,7 @@ const answersDemoCopy = [
     quizId: 0,
     answers: [
       { questionId: '0b11', optionId: 1},
-      { questionId: '0b11', optionId: 3}
+      { questionId: '0b21', optionId: 3}
     ]
   }
 ];
@@ -222,7 +220,62 @@ const answerReducerDefaultState = [];
 const answerReducer = (state = answerReducerDefaultState, action)=>{
   switch(action.type){
     case 'CHANGE_ANSWER':
-      state.map((quiz)=>{});
+      if(state.length !== 0){
+        //console.log('state not empty');
+        let otherFoo = true;
+        const newState = state.map((answerObjWithQuizId)=>{
+          if(answerObjWithQuizId.quizId === action.quizId){
+            //console.log('quiz found');
+            let foo = true;
+            let size = answerObjWithQuizId.answers.length;
+            let updatedAnswers = [];
+            let p = new Promise((resolve, reject)=>{
+              updatedAnswers = answerObjWithQuizId.answers.map((answerObj, index)=>{
+                //console.log(answerObj.questionId=== action.answer.questionId);
+                if(answerObj.questionId === action.answer.questionId){
+                  foo = false;
+                 // console.log('quiz found and answerObj found');
+                  return {...answerObj, ...action.answer};
+                }else{
+                  return answerObj;
+                }
+              });
+              if(foo){
+                reject();
+              }else{
+                resolve();
+              }
+            });
+            p.then(()=>{}, ()=>{
+              updatedAnswers.push(action.answer);
+            });
+            return {quizId: answerObjWithQuizId.quizId, answers: updatedAnswers};
+          }else{
+            otherFoo = false;
+            //console.log('quiz not found');
+            return answerObjWithQuizId;
+            //return state.concat(newAnswerObjWithQuizId);
+            //return state.concat('something');
+          }
+        });
+        
+        
+        if(otherFoo === false){
+          const newAnswerObjWithQuizId = {
+            quizId: action.quizId,
+            answers: [action.answer]
+          };
+          //console.log('final', newState.concat(newAnswerObjWithQuizId));
+          return newState.concat(newAnswerObjWithQuizId);
+        }
+      }else{
+        //console.log('state empty');
+        const newAnswerObjWithQuizId = {
+          quizId: action.quizId,
+          answers: [action.answer]
+        }
+        return [newAnswerObjWithQuizId];
+      }
     default:
       return state;
   }
@@ -261,16 +314,23 @@ const store = createStore(
 );
 
 const unsubscribe = store.subscribe(()=>{
-  console.log(store.getState());
+  console.log(store.getState().answers);
 });
 
 const firstQuiz = store.dispatch(addQuiz({ 
   quizName: 'first quiz', description: 'description about first quiz'
 }));
+const secondQuiz = store.dispatch(addQuiz({ 
+  quizName: 'second quiz', description: 'description about second quiz'
+}));
 //store.dispatch(removeQuiz({ id: firstQuiz.id }));
-store.dispatch(editQuiz({ id: firstQuiz.quiz.id, updates:{quizName: 'modified quiz'} }));
-store.dispatch(addQuestion({ quizId: firstQuiz.quiz.id, question: 'my first question', options: [{id: 10}, {id: 20}, {id: 30}, {id: 40}] }));
-const firstQuestion = store.dispatch(addQuestion({ quizId: firstQuiz.quiz.id, question: 'my second question', options: [{id: 1}, {id: 2}] }));
+//store.dispatch(editQuiz({ id: firstQuiz.quiz.id, updates:{quizName: 'modified quiz'} }));
+const firstQuestion = store.dispatch(addQuestion({ quizId: firstQuiz.quiz.id, question: 'first question first quiz', options: [{id: 1}, {id: 2}, {id: 3}, {id: 4}] }));
+const secondQuestion = store.dispatch(addQuestion({ quizId: firstQuiz.quiz.id, question: 'second question first quiz', options: [{id: 1}, {id: 2}, {id: 3}, {id: 4}] }));
 //store.dispatch(removeQuestion({ quizId: firstQuiz.quiz.id, questionId: firstQuestion.questionObj.id }));
-store.dispatch(editQuestion({ quizId: firstQuiz.quiz.id, questionId: firstQuestion.questionObj.id, updates: { question: 'edited question' } }));
-store.dispatch(changeAnswer({ quizId: firstQuiz.quiz.id, questionId: firstQuestion.questionObj.id, optionId: 90}));
+//store.dispatch(editQuestion({ quizId: firstQuiz.quiz.id, questionId: firstQuestion.questionObj.id, updates: { question: 'edited question' } }));
+store.dispatch(changeAnswer({ quizId: firstQuiz.quiz.id, answer: {questionId: firstQuestion.questionObj.id, optionId: 90}}));
+store.dispatch(changeAnswer({ quizId: firstQuiz.quiz.id, answer: {questionId: 1000, optionId: 123456}}));
+store.dispatch(changeAnswer({ quizId:1231654, answer: {questionId: 1000, optionId: 123456}}));
+store.dispatch(changeAnswer({ quizId:1231654, answer: {questionId: 1000, optionId: 123456}}));
+store.dispatch(changeAnswer({ quizId:1231654, answer: {questionId: 2000, optionId: 123456}}));
