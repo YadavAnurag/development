@@ -5,4 +5,4 @@ import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 
 const jsx = <AppRouter />;
-ReactDOM.render(<p>something goes here....</p>, document.getElementById('app'));
+ReactDOM.render(<AppRouter />, document.getElementById('app'));
